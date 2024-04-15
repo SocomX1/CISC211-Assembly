@@ -11,16 +11,17 @@ _start:
 _recursiveFactorial:
     push ebp
     mov ebp,esp
-;    sub esp,4
 
-    cmp DWORD[ebp+8],1
+    cmp DWORD[ebp+8],2; base case is reached when current index is 2
     je terminateFunction
 
+    ; begin recursive case
     dec DWORD[ebp+8]
     imul eax,DWORD[ebp+8]
 
     push DWORD[ebp+8]
     call _recursiveFactorial
+    ; end recursive case
 
     mov [factorialValue],eax
 
