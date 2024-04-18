@@ -1,5 +1,4 @@
 This program executes a loop to create a specified amount of empty text files.
-```assembly
 section .text
     global _start
 
@@ -37,7 +36,7 @@ _start:
 
 _integerToString:
     mov esi,emptyString;        the esi (extended source index) register is used, as its purpose is to serve as a pointer for string and memory array copying
-    add esi,9;                  point esi to the end of the empty string buffer
+    add esi,7;                  point esi to the end of the empty string buffer
     mov BYTE[esi],0;            insert 0 to denote end of string
 
     mov ebx,10;                 all digits of eax will be divided by 10 (effectively digit modulo 10)  
@@ -61,10 +60,10 @@ exit:
     int 0x80
   
 section .data
-    filesToCreate dd 33;        number of empty files to create, numbered 1 through the value of this variable
+    filesToCreate dd 100;       number of empty files to create, numbered 1 through the value of this variable
     dirName db 'spam',0h;       must alter baseFileName AND ebx offset if you modify this
     baseFileName dt 'spam/spam';must start with the same string as dirName, must also alter ebx offset if you modify this   
 
 segment .bss
-    emptyString resb 10;        blank string used as a buffer to convert integer to string
+    emptyString resb 8;        blank string used as a buffer to convert integer to string
 ```
