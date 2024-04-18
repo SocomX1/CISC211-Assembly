@@ -36,8 +36,8 @@ _start:
     jmp generateNextFile;       else, iterate
 
 _integerToString:
-    mov esi,emptyString
-    add esi,9
+    mov esi,emptyString;        the esi (extended source index) register is used, as its purpose is to serve as a pointer for string and memory array copying
+    add esi,9;                  point esi to the end of the empty string buffer
     mov BYTE[esi],0;            insert 0 to denote end of string
 
     mov ebx,10;                 all digits of eax will be divided by 10 (effectively digit modulo 10)  
@@ -47,8 +47,8 @@ _integerToString:
 
         div ebx;                divide eax by ebx (10), remainder will be equal to the least significant digit of eax
         add dl,'0';             convert least significant digit to string         
-        dec esi
-        mov [esi],dl;           insert converted characters from right to left
+        dec esi;                move esi pointer to the left
+        mov [esi],dl;           insert converted character from right to left
 
         test eax,eax;           determine if all digits have been converted (eax = 0)
         jnz convertNextDigit;   if not, iterate
