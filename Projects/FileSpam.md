@@ -1,4 +1,10 @@
-This program executes a loop to create a specified amount of empty text files.
+The program generates a user-specified number of empty files. In order to prevent clutter, these files will be placed in a subdirectory. The name of this subdirectory as well as the files themselves is configurable, but it is advisable to leave them as the default in order to avoid conflicts with string length and pointer offsets.
+
+The code consists of three major segments:
+- Directory creation
+- File creation loop
+- Integer to string conversion function
+```assembly
 section .text
     global _start
 
@@ -65,5 +71,5 @@ section .data
     baseFileName dt 'spam/spam';must start with the same string as dirName, must also alter ebx offset if you modify this   
 
 segment .bss
-    emptyString resb 8;        blank string used as a buffer to convert integer to string
+    emptyString resb 8;         blank string used as a buffer to convert integer to string
 ```
