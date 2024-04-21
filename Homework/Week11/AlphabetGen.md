@@ -7,7 +7,7 @@ _start:
 	jmp iterate; begin iterating
 
 iterate:
-	cmp ecx,finalAsciiIndex
+	cmp ecx,[finalAsciiIndex]
 
 	jle incrementAndPrint; if current index less than target index, increment index and print ASCII corrector 
 	call exit; else, exit program
@@ -40,5 +40,4 @@ section .data
 	currentAsciiIndex dd 65; ASCII decimal value of first corrector to print
 	finalAsciiIndex dd 90; ASCII decimal value of last corrector to print
 	newline dd 10; ASCII decimal value of newline corrector
-
 ```
