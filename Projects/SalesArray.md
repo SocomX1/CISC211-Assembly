@@ -23,8 +23,8 @@ initDifferenceArray:
     jle initDifferenceArray;    if index of salesArray <= 11, next iteration
 
     xor ebx,ebx
-    mov ecx,1
-    jg iterateDifferences;      else reset ebx to 0, ecx to 1, and begin calculating sums
+    mov ecx,2
+    jg iterateDifferences;      else reset ebx to 0, ecx to 2, and begin calculating sums
 
     iterateDifferences:;            only called once to establish initial highest sum
         mov ebx,DWORD[eax];         set ebx to value of first diffArray element
@@ -35,12 +35,15 @@ initDifferenceArray:
 
             updateLargestSum:;                  called whenever new largest sum is found
                 mov [currentLargestSum],ebx;    update variable representing value of the current largest sum
+                push ecx
+                inc ecx
                 mov [highestEndingMonth],ecx;     
+                pop ecx
                 mov edx,[currentStartingMonth]; set highest starting month to current starting month
                 mov [highestStartingMonth],edx
-                jmp checkSums
+                jmp checkForLargestSum
 
-                checkSums:
+                checkForLargestSum:
                     cmp eax,diffArrayEndAddress
                     jge shrinkArray
 
@@ -50,7 +53,7 @@ initDifferenceArray:
 
                     cmp ebx,[currentLargestSum]
                     jg updateLargestSum
-                    jmp checkSums
+                    jmp checkForLargestSum
 
                     shrinkArray:
                         mov edx,[arrayOffset]
@@ -73,7 +76,7 @@ initDifferenceArray:
                         mov ebx,DWORD[eax]
                         add eax,4
                         add ebx,DWORD[eax]
-                        jmp checkSums
+                        jmp checkForLargestSum
 
 exit:
     mov eax,[highestStartingMonth]
@@ -90,7 +93,7 @@ section .data
     diffArrayStartAddress equ diffArray
 
     arrayOffset dd 0
-    currentStartingMonth dd 1
+    currentStartingMonth dd 2
 
 segment .bss
     currentLargestSum resb 4
