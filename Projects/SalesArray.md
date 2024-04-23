@@ -37,15 +37,15 @@ initDifferenceArray:
                 mov [currentLargestSum],ebx;    update variable representing value of the current largest sum
                 push ecx
                 inc ecx
-                mov [highestEndingMonth],ecx;     
+                mov [highestEndingMonth],ecx;   set highest ending month to ecx + 1, each iteration begins with already having added the starting month's sales with the subsequent month
                 pop ecx
                 mov edx,[currentStartingMonth]; set highest starting month to current starting month
                 mov [highestStartingMonth],edx
-                jmp checkForLargestSum
+                jmp checkForLargestSum;         continue the rest of this iteration
 
                 checkForLargestSum:
-                    cmp eax,diffArrayEndAddress
-                    jge shrinkArray
+                    cmp eax,diffArrayEndAddress;    compare address of current diffArray element with address of second to last diffArray element
+                    jge shrinkArray;                if current index is that of the second to last element,
 
                     inc ecx
                     add eax,4
@@ -86,7 +86,7 @@ exit:
     int 0x80
 
 section .data
-    salesArray dd 100,113,110,85,81,101,94,106,105,102,86,63
+    salesArray dd 100,113,110,85,81,101,94,106,105,0,20,40
 
     diffArray dd 0,0,0,0,0,0,0,0,0,0,0
     diffArrayEndAddress equ $ - 4;address of second to last element
