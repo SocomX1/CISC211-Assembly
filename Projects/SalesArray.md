@@ -86,7 +86,7 @@ exit:
     int 0x80
 
 section .data
-    salesArray dd 100,113,110,85,81,101,94,106,105,0,20,40
+    salesArray dd 100,113,110,85,81,101,94,106,105,102,86,63
 
     diffArray dd 0,0,0,0,0,0,0,0,0,0,0
     diffArrayEndAddress equ $ - 4;address of second to last element
