@@ -82,7 +82,7 @@ initDifferenceArray:
                     add edx,4
                     mov [arrayOffset],edx
 
-                    cmp edx,40
+                    cmp edx,40; try removing magic number and compare array addresses instead
                     jl beginNextIteration
                     jge exit
 
@@ -102,8 +102,6 @@ section .data
 
     arrayOffset dd 0
     currentStartingMonth dd 1
-
-    ;currentLargestSum dd 0
 
 segment .bss
     currentLargestSum resb 4
