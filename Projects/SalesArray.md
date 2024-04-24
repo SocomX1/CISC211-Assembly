@@ -23,60 +23,68 @@ initDifferenceArray:
     jle initDifferenceArray;    if index of salesArray <= 11, next iteration
 
     xor ebx,ebx
-    mov ecx,2
-    jg iterateDifferences;      else reset ebx to 0, ecx to 2, and begin calculating sums
+    xor ecx,ecx
+    xor edx,edx
 
-    iterateDifferences:;            only called once to establish initial highest sum
-        mov ebx,DWORD[eax];         set ebx to value of first diffArray element
-        add eax,4;                  point eax to address of second diffArray element
-        add ebx,DWORD[eax];         add value of second diffArray element to ebx
+    jg beginNextIteration
 
-        jmp updateLargestSum;       starting sum is largest by default, so update cooresponding variables
+    ;first iteration:
+    ;ebx set to difArray[0]
+    ;currentStartingMonth = 2 (1 + 1)
+    ;ecx set to 3 (currentStartingMonth + 1), and represents current ending month
+    beginNextIteration:
+        mov edx,diffArrayStartAddress
+        add edx,[arrayOffset]
+        mov ebx,DWORD[edx]
 
-            updateLargestSum:;                  called whenever new largest sum is found
-                mov [currentLargestSum],ebx;    update variable representing value of the current largest sum
-                push ecx
-                inc ecx
-                mov [highestEndingMonth],ecx;   set highest ending month to ecx + 1, each iteration begins with already having added the starting month's sales with the subsequent month
-                pop ecx
-                mov edx,[currentStartingMonth]; set highest starting month to current starting month
+        mov eax,edx
+        add eax,4
+
+        mov edx,[currentStartingMonth]
+        inc edx
+        mov [currentStartingMonth],edx
+
+        inc edx
+        mov ecx,edx
+
+        jmp sumDifferences
+
+        ;ebx acts as summation
+        sumDifferences:
+            add ebx,DWORD[eax];             summation
+
+            cmp ebx,[currentLargestSum]
+
+            jg updateLargestSum
+            jle checkForNextElement
+
+            updateLargestSum:
+                mov [currentLargestSum],ebx
+
+                mov edx,[currentStartingMonth]
                 mov [highestStartingMonth],edx
-                jmp checkForLargestSum;         continue the rest of this iteration
 
-                checkForLargestSum:
-                    cmp eax,diffArrayEndAddress;    compare address of current diffArray element with address of second to last diffArray element
-                    jge shrinkArray;                if current index is that of the second to last element,
+                mov [highestEndingMonth],ecx
+                jmp checkForNextElement
 
-                    inc ecx
-                    add eax,4
-                    add ebx,DWORD[eax]
+            checkForNextElement:
+                inc ecx
+                add eax,4;                      traversal
 
-                    cmp ebx,[currentLargestSum]
-                    jg updateLargestSum
-                    jmp checkForLargestSum
+                ;short circuit eval
+                cmp eax,diffArrayEndAddress
+                jle sumDifferences
+                jg removeElement
 
-                    shrinkArray:
-                        mov edx,[arrayOffset]
-                        add edx,4
-                        mov [arrayOffset],edx
+                ;reset eax to address of new first diffArray element
+                removeElement:
+                    mov edx,[arrayOffset]
+                    add edx,4
+                    mov [arrayOffset],edx
 
-                        mov edx,diffArrayStartAddress
-                        add edx,[arrayOffset]
-                        cmp edx,diffArrayEndAddress
-
-                        jge exit
-
-                        mov eax,edx
-
-                        mov edx,[currentStartingMonth]; increment current starting month
-                        inc edx
-                        mov [currentStartingMonth],edx
-                        mov ecx,[currentStartingMonth]
-
-                        mov ebx,DWORD[eax]
-                        add eax,4
-                        add ebx,DWORD[eax]
-                        jmp checkForLargestSum
+                    cmp edx,40
+                    jl beginNextIteration
+                    jge exit
 
 exit:
     mov eax,[highestStartingMonth]
@@ -93,7 +101,9 @@ section .data
     diffArrayStartAddress equ diffArray
 
     arrayOffset dd 0
-    currentStartingMonth dd 2
+    currentStartingMonth dd 1
+
+    ;currentLargestSum dd 0
 
 segment .bss
     currentLargestSum resb 4
